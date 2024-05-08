@@ -1,0 +1,35 @@
+:root {
+    --primary: white;
+    --secondary: white;
+    --accent: white;
+    --text: white;
+    --gradient: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,124,1) 35%, rgba(0,0,124,1) 100%);
+}
+
+html {
+    height: 100%;
+    width: 100%;
+
+    color: var(--text);
+    background: var(--gradient);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+nav {
+    height: auto;
+    background-color: var(--secondary);
+    display: flex;
+    justify-content: space-between;
+    padding: 4px;
+}
+nav div a {
+    padding: 10px 5px 10px 5px;
+    color: var(--accent);
+}
+nav div a:hover {
+    color: purple;
+}

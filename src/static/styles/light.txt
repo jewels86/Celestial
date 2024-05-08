@@ -1,0 +1,4 @@
+primary:white
+secondary:rgb(56, 0, 161)
+accent:rgb(89, 0, 255);
+text:black

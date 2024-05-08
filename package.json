@@ -1,0 +1,28 @@
+{
+  "name": "celestial",
+  "version": "1.0.0",
+  "description": "A modular, feature packed proxy. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jewels86/Celestial.git"
+  },
+  "keywords": [
+    "proxy",
+    "uv",
+    "ultraviolet"
+  ],
+  "author": "Jewels",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jewels86/Celestial/issues"
+  },
+  "homepage": "https://github.com/jewels86/Celestial#readme",
+  "dependencies": {
+    "@titaniumnetwork-dev/ultraviolet": "^3.1.1",
+    "express": "^4.19.2"
+  }
+}

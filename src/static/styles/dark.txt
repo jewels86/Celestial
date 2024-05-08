@@ -1,0 +1,5 @@
+primary-dark:black
+secondary-dark:rgb(0, 0, 124)
+accent-dark:blue
+text-dark:white
+gradient:linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,124,1) 35%, rgba(0,0,124,1) 100%);
