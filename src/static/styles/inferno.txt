@@ -1,0 +1,5 @@
+primary:black
+secondary:rgb(124, 0, 0)
+accent:red
+text:white
+gradient:linear-gradient(45deg, rgba(0,0,0,1) 10%, rgba(166,0,0,1) 55%, rgba(124,0,0,1) 100%)

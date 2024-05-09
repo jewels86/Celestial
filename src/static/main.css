@@ -1,9 +1,11 @@
 :root {
-    --primary: white;
-    --secondary: white;
-    --accent: white;
-    --text: white;
-    --gradient: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,124,1) 35%, rgba(0,0,124,1) 100%);
+    --primary: black;
+    --secondary: black;
+    --accent: black;
+    --text: black;
+    --gradient: black;
+    --scroll-bar-background: black;
+    --scroll-bar-foreground: black;
 }
 
 html {
@@ -12,24 +14,110 @@ html {
 
     color: var(--text);
     background: var(--gradient);
+    font-family: monospace, 'OCR A';
 }
 
-body {
+body, main {
     display: flex;
     flex-direction: column;
+    margin: 0;
+    height: 100%;
+}
+
+h1 {
+    font-size: 80px;
+    font-family: 'Trattatello', 'OCR A';
 }
 
 nav {
     height: auto;
-    background-color: var(--secondary);
+    background-color: var(--primary);
     display: flex;
     justify-content: space-between;
     padding: 4px;
+    align-content: center;
 }
 nav div a {
     padding: 10px 5px 10px 5px;
     color: var(--accent);
+    font-size: 20px;
 }
 nav div a:hover {
     color: purple;
+}
+
+.center {
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+    margin: auto;
+    height: 60%;
+    width: 60%;
+}
+.center h1 {
+    color: var(--accent);
+}
+input {
+    width: 80%;
+    background-color: var(--text);
+    color: var(--primary);
+    height: 20px;
+    border: solid;
+    border-color: var(--primary);
+    border-radius: 5px;
+}
+input::placeholder {
+    color: grey;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+footer div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+footer .bottom p {
+    margin: 8px;
+}
+
+#overlay {
+    display: flex;
+    position: fixed;
+    width: 80%;
+    height: 60%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    justify-self: center;
+    align-self: center;
+    flex: 1;
+    flex-direction: column;
+    padding: 5px;
+    margin-top: 10%;
+    color: white;
+    overflow: auto;
+    overflow-y: scroll;
+    overflow-x: auto;
+}
+
+.overlay-setting {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    height: auto;
+    align-items: center;
+}
+.overlay-setting p, input, button {
+    margin: 4px;
+}
+
+.overlay-setting input, .overlay-setting button, .overlay-setting select {
+    width: 60%;
 }
