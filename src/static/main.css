@@ -121,3 +121,41 @@ footer .bottom p {
 .overlay-setting input, .overlay-setting button, .overlay-setting select {
     width: 60%;
 }
+
+.overlay-divider h2, .overlay-divider hr {
+    width: 80%;
+}
+.overlay-divider h2 {
+    margin: 0;
+    margin-left: 10%;
+}
+.overlay-divider {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+#sub-overlay {
+    display: flex;
+    position: fixed;
+    width: 40%;
+    height: 40%;
+    background-color: rgba(0,0,0,1);
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    justify-self: center;
+    align-self: center;
+    flex: 1;
+    flex-direction: column;
+    padding: 5px;
+    margin-top: 30%;
+    color: white;
+}
+
+.sub-overlay-option {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
