@@ -2,4 +2,4 @@ primary:white
 secondary:rgb(0, 0, 161)
 accent:rgb(0, 0, 255);
 text:black
-gradient:linear-gradient(45deg, rgba(255,255,255,1) 10%, rgba(0,0,166,1) 55%, rgba(0,0,124,1) 100%)
+gradient:linear-gradient(45deg, rgba(0,0,124,1) 10%, rgba(0,0,166,1) 55%, rgba(255,255,255,1) 100%)

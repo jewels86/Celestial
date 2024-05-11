@@ -158,4 +158,11 @@ footer .bottom p {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 80%;
+}
+.overlay-mod {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

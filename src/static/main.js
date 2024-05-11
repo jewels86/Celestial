@@ -8,13 +8,53 @@ const scriptStages = Object.freeze({
     Startup: 0,
     Search: 1
 });
-const defaultStyle = `
-primary:
+const defaultStyle = `primary:
 secondary:
 accent:
 text:
-gradient:
-`;
+gradient:`;
+const settings = [
+    {
+        _type: "divider",
+        content: "Tab"
+    },
+    {
+        _type: "setting",
+        name: "Style",
+        action: " setCookie('style', '[x]'); if ('[x]' != 'mod') { switchTo('[x]'); } else { window.location.reload(); }",
+        default: "getCookie('style')",
+        type: "dropdown",
+        choices: ["Light", "Dark", "Inferno", "Emerald", "Mod"]
+    },
+    {
+        _type: "setting",
+        name: "Cloaking",
+        action: "",
+        default: "",
+        type: "dropdown",
+        choices: ["Disabled", "about:blank"]
+    },
+    {
+        _type: "divider",
+        content: "Miscellaneous"
+    },
+    {
+        _type: "setting",
+        name: "Mods",
+        action: "setCookie('mods-enabled', '[x]');",
+        default: "getCookie('mods-enabled');",
+        type: "dropdown",
+        choices: ["Enabled", "Disabled"]
+    },
+    {
+        _type: "setting",
+        name: "Jokes",
+        action: "setCookie('jokes', '[x]');",
+        default: "getCookie('jokes');",
+        type: "dropdown",
+        choices: ["Enabled", "Disabled"]
+    }
+]
 
 async function get(path) {
     return (await fetch(path)).text();
@@ -41,7 +81,7 @@ function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
+    for(let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) == ' ') {
         c = c.substring(1);
@@ -58,7 +98,7 @@ function setCookie(name, value) {
 
 function getAmountOfMods() {
     for (let i = 0; i >= 0; i++) {
-        const modContent = getCookie(`mod-${i}-content`);
+        const modContent = getCookie(`mod-${i}`);
         if (modContent == null || modContent.length == 0) { return i; }
     }
 }
@@ -80,48 +120,6 @@ function settingsHandler() {
     }
     else if (!settingsOverlayActive && !modsOverlayActive){
         const overlay = createOverlay();
-        const settings = [
-            {
-                _type: "divider",
-                content: "Tab"
-            },
-            {
-                _type: "setting",
-                name: "Style",
-                action: " setCookie('style', '[x]'); if ('[x]' != 'mod') { switchTo('[x]'); } else { window.location.reload(); }",
-                default: "getCookie('style')",
-                type: "dropdown",
-                choices: ["Light", "Dark", "Inferno", "Emerald", "Mod"]
-            },
-            {
-                _type: "setting",
-                name: "Cloaking",
-                action: "",
-                default: "",
-                type: "dropdown",
-                choices: ["Disabled", "about:blank"]
-            },
-            {
-                _type: "divider",
-                content: "Miscellaneous"
-            },
-            {
-                _type: "setting",
-                name: "Mods",
-                action: "setCookie('mods-enabled', '[x]');",
-                default: "getCookie('mods-enabled');",
-                type: "dropdown",
-                choices: ["Enabled", "Disabled"]
-            },
-            {
-                _type: "setting",
-                name: "Jokes",
-                action: "setCookie('jokes', '[x]');",
-                default: "getCookie('jokes');",
-                type: "dropdown",
-                choices: ["Enabled", "Disabled"]
-            }
-        ]
 
         settings.forEach((item) => {
             if (item._type == "setting") {
@@ -203,15 +201,15 @@ function modsHandler() {
                 const numberOfMods = getAmountOfMods();
                 const name = document.getElementById("sub-overlay-name").value;
 
-                console.log(`mod-${numberOfMods}-content=${defaultStyle};`);
-                setCookie(`mod-${numberOfMods}-content=${defaultStyle};`);
-
                 if (document.getElementById('sub-overlay-type').value == "style") {
-                    setCookie(`mod-${numberOfMods}-settings`, `0-${name.length != 0 || name == null ? name.value : " "}-0`);
+                    var toWrite1 = 'mod-' + numberOfMods.toString();
+                    var toWrite2 = '0-' + (name.length != 0 || name != null ? name : " ") + '-0-' + defaultStyle.replaceAll('\n', '\\n');
+                    document.cookie = `${toWrite1}=${toWrite2};`;
                 }
 
                 div.remove();
-                window.location.reload();
+                document.getElementById('mods').click();
+                document.getElementById('mods').click();
             }
             div.appendChild(button2);
             document.body.appendChild(div);
@@ -220,23 +218,20 @@ function modsHandler() {
         overlay.appendChild(button);
         console.log(getAmountOfMods());
         for (let i = 0; i <= getAmountOfMods() - 1; i++) {
-            const modContent = getCookie(`mod-${i}-content`);
-            console.log(`Found mod ${i}: ${modContent}`);
-            
-            const modSettings = getCookie(`mod-${i}-settings`).split('-');
+            const mod = getCookie(`mod-${i}`).split('-');
             
             const div = document.createElement('div');
             div.className = "overlay-mod";
 
-            if (modSettings[0] == modTypes.Style) {
-                // [type]-[name]-[enabled(1)/disabled(0)]
-                if (modSettings[2] != 0) switchTo(null, modContent);
+            if (mod[0] == modTypes.Style) {
+                // [type]-[name]-[enabled(1)/disabled(0)]-:[content]
+                if (mod[2] == 1 && getCookie('style') == 'mod') switchTo(null, modContent);
                 const text = document.createElement('p');
-                text.innerText = `${modSettings[1]} (Style)`;
+                text.innerText = `${mod[1]} (Style)`;
                 div.appendChild(text);
 
                 const textarea = document.createElement('textarea');
-                textarea.value = modContent;
+                textarea.value = mod[3].replaceAll('\\n', '\n');
                 div.appendChild(textarea);
             }
             overlay.appendChild(div);
