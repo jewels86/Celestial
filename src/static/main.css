@@ -57,17 +57,21 @@ nav div a:hover {
 .center h1 {
     color: var(--accent);
 }
-input {
+.center input {
     width: 80%;
-    background-color: var(--text);
-    color: var(--primary);
+    background-color: white;
+    color: black;
     height: 20px;
     border: solid;
     border-color: var(--primary);
     border-radius: 5px;
 }
-input::placeholder {
+.center input::placeholder {
     color: grey;
+}
+
+.name-input {
+    margin: 0;
 }
 
 footer {
@@ -90,7 +94,7 @@ footer .bottom p {
     position: fixed;
     width: 80%;
     height: 60%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.75);
     justify-content: center;
     align-content: center;
     align-items: center;
@@ -150,7 +154,7 @@ footer .bottom p {
     flex: 1;
     flex-direction: column;
     padding: 5px;
-    margin-top: 30%;
+    margin-top: 20%;
     color: white;
 }
 
@@ -165,4 +169,32 @@ footer .bottom p {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.overlay-mod-settings {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.overlay-mod-sub {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.delete-button {
+    margin: 0;
+}
+.overlay-mod p {
+    height: 20%;
+    width: 20%;
+    margin-top: 5%;
+}
+.overlay-mod-sub {
+    width: 80%;
+}
+.overlay-mod-sub textarea {
+    width: 80%;
+}
+.overlay-mod-settings {
+    width: 20%;
 }

@@ -1,5 +1,5 @@
-primary:black
-secondary:rgb(0, 0, 124)
+primary:dark
+secondary:rgb(0, 0, 161)
 accent:blue
 text:white
-gradient:linear-gradient(45deg, rgba(0,0,0,1) 10%, rgba(0,0,166,1) 55%, rgba(0,0,124,1) 100%)
+gradient:black
