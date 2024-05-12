@@ -2,6 +2,11 @@
 <html>
     <head>
         <link rel="stylesheet" href="/src/static/main.css">
+        
+        <script src="baremux/bare.cjs" defer></script>
+        <script src="epoxy/index.js" defer></script>
+        <script src="uv/uv.bundle.js" defer></script>
+        <script src="uv/uv.config.js" defer></script>
     </head>
     <body>
         <header>
@@ -17,9 +22,7 @@
         <main>
             <div class="center">
                 <h1>Celestial</h1>
-                <form class="form">
-                    <input spellcheck="false" type="text" placeholder="Enter a URL or search">
-                </form>
+                <input id="address" spellcheck="false" type="text" placeholder="Enter a URL or search">
             </div>
         </main>
         <footer>
@@ -33,5 +36,7 @@
             </div>
         </footer>
     </body>
-    <script src="/src/static/main.js" type="module"></script>
+    <script src="/src/static/lib.js"></script>
+    <script src="/src/static/main.js"></script>
+    <script src="/src/static/uv.js"></script>
 </html>

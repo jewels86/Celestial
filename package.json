@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "A modular, feature packed proxy. ",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "node index.js"
+    "test": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +24,10 @@
   },
   "homepage": "https://github.com/jewels86/Celestial#readme",
   "dependencies": {
+    "@mercuryworkshop/bare-mux": "^1.1.0",
+    "@mercuryworkshop/epoxy-transport": "^1.1.0",
     "@titaniumnetwork-dev/ultraviolet": "^3.1.1",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "wisp-server-node": "^1.1.0"
   }
 }

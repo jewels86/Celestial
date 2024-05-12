@@ -1,158 +1,3 @@
-const modTypes = [
-    {name: "Style", index: 0},
-    {name: "Script", index: 1},
-    {name: "Overlay", index: 2},
-    {name: "Page", index: 3}
-]
-const scriptStages = [
-    {name: "Startup", index: 0},
-    {name: "Search", index: 1}
-]
-const defaultStyle = `primary:
-secondary:
-accent:
-text:
-gradient:`;
-const settings = [
-    {
-        _type: "divider",
-        content: "Tab"
-    },
-    {
-        _type: "setting",
-        name: "Style",
-        action: "if ('[x]' != 'mod') { switchTo('[x]'); setCookie('style', '[x]'); } else { switchTo(null, getStyleFromMod()); setCookie('style', '[x]'); }",
-        default: "getCookie('style')",
-        type: "dropdown",
-        choices: ["Light", "Dark", "Azure", "Inferno", "Emerald", "Mod"]
-    },
-    {
-        _type: "setting",
-        name: "Cloaking",
-        action: "setCookie('cloaking', '[x]');",
-        default: "getCookie('cloaking');",
-        type: "dropdown",
-        choices: ["Disabled", "about:blank"]
-    },
-    {
-        _type: "divider",
-        content: "Miscellaneous"
-    },
-    {
-        _type: "setting",
-        name: "Mods",
-        action: "setCookie('mods', '[x]');",
-        default: "getCookie('mods');",
-        type: "dropdown",
-        choices: ["Enabled", "Disabled"]
-    },
-    {
-        _type: "setting",
-        name: "Jokes",
-        action: "setCookie('jokes', '[x]');",
-        default: "getCookie('jokes');",
-        type: "dropdown",
-        choices: ["JokeAPI", "icanhazdadjoke.com", "Disabled"]
-    }
-]
-const toReplace = [
-    {character: ';', replacement: '\\s\\'},
-    {character: '/', replacement: '\\f\\'},
-    {character: '?', replacement: '\\q\\'},
-    {character: ':', replacement: '\\c\\'},
-    {character: '@', replacement: "\\a\\"},
-    {character: '&', replacement: "\\a2\\"},
-    {character: '=', replacement: "\\e\\"},
-    {character: '$', replacement: "\\d\\"},
-    {character: ',', replacement: "\\c2\\"},
-    {character: '%', replacement: "\\p\\"},
-    {character: '#', replacement: "\\h\\"},
-    {character: '\n',replacement: "\\n\\"},
-    {character: '.', replacement: "\\p2\\"}
-]
-
-async function get(path) {
-    return (await fetch(path)).text();
-}
-
-async function switchTo(style, mod = '') {
-    if (style != null) {
-        var root = document.querySelector(':root');
-        const data = await get(`/src/static/styles/${style}.txt`);
-        data.split("\n").forEach(element => {
-            const parts = element.split(":");
-            root.style.setProperty(`--${parts[0]}`, parts[1]);
-        });
-    } else {
-        var root = document.querySelector(':root');
-        mod.split("\n").forEach(element => {
-            const parts = element.split(":");
-            root.style.setProperty(`--${parts[0]}`, parts[1]);
-        });
-    }
-}
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            var output = c.substring(name.length, c.length);
-            toReplace.forEach((r) => {
-                output = output.replaceAll(r.replacement, r.character);
-            });
-            return output;
-        }
-    }
-    return "";
-}
-function setCookie(name, value) {
-    var _name = name;
-    var _value = value;
-    toReplace.forEach((r) => {
-        _name = _name.replaceAll(r.character, r.replacement);
-        _value = _value.replaceAll(r.character, r.replacement);
-    });
-
-    document.cookie = `${_name}=${_value}; expires=${new Date(2147483647 * 1000).toUTCString()};`;
-}
-
-function getAmountOfMods() {
-    for (let i = 0; i >= 0; i++) {
-        const modContent = getCookie(`mod-${i}`);
-        if (modContent == null || modContent.length == 0) { return i; }
-    }
-}
-function getModsWithType(type) {
-    var output = [];
-    for (let index = 0; index < getAmountOfMods(); index++) {
-        if (getCookie(`mod-${index}`).split('-')[0] == type.toString()) output.push(index); 
-    }
-    return output;
-}
-
-function getStyleFromMod() {
-    var output = '';
-    getModsWithType(0).forEach(i => {
-        const mod = getCookie(`mod-${i}`).split("-");
-        if (mod[2] == '1') {
-            output = mod[3];
-        }
-    });
-    return output;
-}
-
-function createOverlay() {
-    const div = document.createElement('div');
-    div.id = 'overlay'
-    document.body.appendChild(div);
-    return div;
-}
-
 let settingsOverlayActive = false;
 let modsOverlayActive = false;
 
@@ -258,7 +103,7 @@ function modsHandler() {
                 }
                 if (document.getElementById('sub-overlay-type').value == "script") {
                     var toWrite1 = 'mod-' + numberOfMods.toString();
-                    var toWrite2 = '1-' + (name.length != 0 || name != null ? name : " ") + '-0-0-';
+                    var toWrite2 = '1-' + (name.length != 0 || name != null ? name : " ") + '-0-1-0-';
                     setCookie(toWrite1, toWrite2);
                 }
 
@@ -364,26 +209,48 @@ function modsHandler() {
                 });
             }
             if (mod[0] == '1') {
-                // [type]-[name]-[enabled(1)/disabled(0)]-[stage]-[content]
-                textarea.textContent = mod[4];
+                // [type]-[name]-[enabled(1)/disabled(0)]-[keybind(0)/stage(1)]-[keybind|stage]-[content]
+                textarea.textContent = mod[5];
                 dropdown.value = mod[2] == 1 ? '1' : '0';
-                const stageDropdown = document.createElement('select');
 
-                scriptStages.forEach((element) => {
-                    const option = document.createElement('option');
-                    option.innerText = element.name;
-                    option.value = element.index.toString();
-                    stageDropdown.appendChild(option);
+                if (mod[3] == '1') {
+                    const stageDropdown = document.createElement('select');
+
+                    stages.forEach((element) => {
+                        const option = document.createElement('option');
+                        option.innerText = element.name;
+                        option.value = element.index.toString();
+                        stageDropdown.appendChild(option);
+                    });
+                    stageDropdown.value = mod[4];
+                    div3.appendChild(stageDropdown);
+                }
+                if (mod[3] == '0') {
+                    const keybindInput = document.createElement('input');
+                    keybindInput.style.margin = '0';
+                    keybindInput.value = mod[4];
+                    div3.appendChild(keybindInput);
+                }
+
+                const keybindOrStage = document.createElement('select');
+                keybindOrStage.innerHTML = `<option value="0">Keybind</option>\n<option value="1">Stage</option>`;
+                keybindOrStage.addEventListener('change', () => {
+                    if (keybindOrStage.value == 0) { mod[4] = 'ctrl+alt+1'; }
+                    if (keybindOrStage.value == 1) { mod[4] = '0'; }
+                    mod[3] = keybindOrStage.value;
+                    setCookie(`mod-${i}`, mod.join("-"));
+                    document.getElementById('mods').click();
+                    document.getElementById('mods').click();
                 });
+                keybindOrStage.value = mod[3];
+                div3.appendChild(keybindOrStage);
 
                 textarea.addEventListener('change', () => {
-                    mod[4] = textarea.value;
+                    mod[5] = textarea.value;
                     setCookie(`mod-${i}`, mod.join('-'));
                 });
-
-                stageDropdown.value = mod[3];
-                div3.appendChild(stageDropdown);
             }
+            
 
             div2.appendChild(textarea);
             div2.appendChild(div3);
@@ -400,52 +267,91 @@ function modsHandler() {
         document.getElementById('mods').click();
     }
 }
+async function main() {
+    if (getCookie("style") != null && getCookie("style").length != 0 && getCookie("style") != "mod") {
+        await switchTo(getCookie("style"));
+        console.log(`${getCookie("style")} (found)`);
+    }
+    else if (getCookie("style") != "mod"){
+        await switchTo("dark");
+        setCookie("style", "dark");
+        console.log(`${getCookie("style")} (not found)`);
+    }
+    else {
+        console.log('mod (found)');
+        switchTo(null, getStyleFromMod());
+    }
+    if (getCookie("jokes").length == 0) {
+        setCookie('jokes', 'jokeapi');
+    }
+    if (getCookie("mods").length == 0) {
+        setCookie('mods', 'enabled');
+    }
+    if (getCookie("cloaking").length == 0) {
+        setCookie('cloaking', 'disabled');
+    }
 
-if (getCookie("style") != null && getCookie("style").length != 0 && getCookie("style") != "mod") {
-    await switchTo(getCookie("style"));
-    console.log(`${getCookie("style")} (found)`);
-}
-else if (getCookie("style") != "mod"){
-    await switchTo("dark");
-    setCookie("style", "dark");
-    console.log(`${getCookie("style")} (not found)`);
-}
-else {
-    console.log('mod (found)');
-    switchTo(null, getStyleFromMod());
-}
-if (getCookie("jokes").length == 0) {
-    setCookie('jokes', 'jokeapi');
-}
-if (getCookie("mods").length == 0) {
-    setCookie('mods', 'enabled');
-}
-if (getCookie("cloaking").length == 0) {
-    setCookie('cloaking', 'disabled');
-}
-
-if (getCookie('jokes') != "disabled") {
-    if (getCookie('jokes') == "jokeapi") {
-        while (true) {
-            const joke = await fetch("https://v2.jokeapi.dev/joke/miscellaneous,dark,pun?type=single");
-            const _joke = await joke.json();
-            if (!_joke.safe) { continue; }
-            document.getElementById('joke').innerText = _joke.joke.replaceAll('\n', " ");
-            break;
+    if (getCookie('jokes') != "disabled") {
+        if (getCookie('jokes') == "jokeapi") {
+            while (true) {
+                const joke = await fetch("https://v2.jokeapi.dev/joke/miscellaneous,dark,pun?type=single");
+                const _joke = await joke.json();
+                if (!_joke.safe) { continue; }
+                document.getElementById('joke').innerText = _joke.joke.replaceAll('\n', " ");
+                break;
+            }
+        }
+        else if (getCookie('jokes') == "icanhazdadjoke.com") {
+            document.getElementById('joke').innerText = await (await fetch('https://icanhazdadjoke.com/', {
+                headers: 
+                {
+                    "User-Agent": "https://github.com/jewels86/Celestial", 
+                    "Accept": "text/plain"
+                }
+            })).text();
+        }
+        else if (getCookie('jokes') == "chuck norris") {
+            await fetch("https://api.chucknorris.io/jokes/random").then((res) => {
+                res.json().then((json) => {document.getElementById('joke').innerText = json.value;});
+            })
         }
     }
-    else if (getCookie('jokes') == "icanhazdadjoke.com") {
-        document.getElementById('joke').innerText = await (await fetch('https://icanhazdadjoke.com/', {
-            headers: 
-            {
-                "User-Agent": "https://github.com/jewels86/Celestial", 
-                "Accept": "text/plain"
-            }
-        })).text();
-    }
-}
 
-const _s = document.getElementById("settings");
-_s.onclick = () => settingsHandler();
-const _m = document.getElementById("mods");
-_m.onclick = () => modsHandler();
+    for (let i = 0; i < getAmountOfMods(); i++) {
+        const mod = getCookie(`mod-${i}`).split('-');
+
+        if (mod[0] == '1') {
+            if (mod[2] == '1' && mod[3] == '1') {
+                scripts[mod[4]] = [];
+                scripts[mod[4]].push(mod[5]);
+            }
+            if (mod[2] == '1' && mod[3] == '0') {
+                document.addEventListener('keydown', (ev) => {
+                    const keybind = mod[4].split('+');
+                    var check = "if (";
+                    keybind.forEach((part, index) => {
+                        if (part == 'ctrl' || part == 'alt' || part == 'shift') {
+                            check += `ev.${part}Key`;
+                        }
+                        else {
+                            check += `ev.key == '${part}'`;
+                        }
+                        if (index + 1 != keybind.length) { check += ' && '; }
+                        else { check += ')'}
+                    });
+                    var passed = false;
+                    eval(check + ' { passed = true; }');
+                    if (passed) { eval(mod[5]); }
+                });
+            }
+        }
+    }
+
+    scripts.forEach(x => x.forEach(y => eval(y)));
+
+    const _s = document.getElementById("settings");
+    _s.onclick = () => settingsHandler();
+    const _m = document.getElementById("mods");
+    _m.onclick = () => modsHandler();
+}
+main();

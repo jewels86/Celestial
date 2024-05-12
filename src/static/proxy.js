@@ -1,0 +1,1 @@
+document.getElementById('frame').src = __uv$config.prefix + location.href.split('=')[1];
