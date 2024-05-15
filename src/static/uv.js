@@ -5,7 +5,7 @@ document.getElementById('address').addEventListener('keydown', async (ev) => {
             console.log(`Sending to: ${address}`);
             if (!navigator.serviceWorker) throw new Error();
 
-            await navigator.serviceWorker.register('/uv/sw.js');
+            await navigator.serviceWorker.register(__uv$config.sw);
             let wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
             await BareMux.SetTransport("EpxMod.EpoxyClient", { wisp: wispUrl });
 

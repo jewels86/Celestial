@@ -198,3 +198,8 @@ footer .bottom p {
 .overlay-mod-settings {
     width: 20%;
 }
+
+#frame {
+    height: 100%;
+    width: 100%;
+}
