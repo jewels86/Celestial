@@ -1,4 +1,4 @@
 node_modules
-
+.gitpod.yml
 .vs
 .vscode

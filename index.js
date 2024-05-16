@@ -54,10 +54,10 @@ server2.on("upgrade", (req, socket, head) => {
 });
 
 server.on("listening", () => {
-    console.log(`Started on http://127.0.0.1:80`)
+    console.log(`Started on http://127.0.0.1:8080`);
 });
 server2.on("listening", () => {
-    console.log(`Started on https://127.0.0.1:443`)
+    console.log(`Started on https://127.0.0.1:8443`);
 });
 
 process.on("SIGINT", stop);

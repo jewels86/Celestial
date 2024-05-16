@@ -13,7 +13,7 @@ document.getElementById('address').addEventListener('keydown', async (ev) => {
                 address = [location.protocol + "//", address].join('');
             }
             if (!address.includes('.')) {
-                address = getCookie('search-engine').replace('%s', address);
+                address = getCookie('search-engine').replace('%s', encodeURIComponent(address));
             }
             console.log(address);
             address = new URL(address).toString(); 

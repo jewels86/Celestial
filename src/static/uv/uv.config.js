@@ -8,4 +8,6 @@ self.__uv$config = {
     bundle: '/uv/uv.bundle.js',
     config: '/uv/uv.config.js',
     sw: '/uv/sw.js',
+    bare: '/baremux/',
+    
 };
