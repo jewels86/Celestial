@@ -1,7 +1,7 @@
 import express from "express";
 import http from "node:http";
 import https from "node:https";
-import { hostname } from "node:os";
+import { createBareServer } from "@tomphttp/bare-server-node";
 import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux";
@@ -10,6 +10,7 @@ import wisp from "wisp-server-node";
 const app = express();
 const server = http.createServer();
 const server2 = https.createServer();
+const bareServer = createBareServer('/bare/');
 
 app.use('/src/static', express.static("src/static"));
 
@@ -34,12 +35,12 @@ app.use((req, res) => {
 });
 
 server.on("request", (req, res) => {
-    /*res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");*/
-    app(req, res);
+    if (bareServer.shouldRoute(req)) { bareServer.routeRequest(req, res); }
+    else app(req, res);
 });
 server.on("upgrade", (req, socket, head) => {
     if (req.url.endsWith("/wisp/")) wisp.routeRequest(req, socket, head);
+    else if (bareServer.shouldRoute('req')) bareServer.routeUpgrade(req, res);
     else socket.end();
 });
 
