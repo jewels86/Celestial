@@ -169,18 +169,21 @@ function createOverlay() {
 function handleSEChangeAction(se) {
     switch (se) {
         case 'google':
-            setCookie('search-engine', 'https://www.google.com/search?q=%s');
+            setCookie('search-engine', 'http://www.google.com/search?q=%s');
             break;
         case 'bing':
-            setCookie('search-engine', 'https://www.bing.com/search?q=%s');
+            setCookie('search-engine', 'http://www.bing.com/search?q=%s');
             break;
     }
 }
 function handleSEDefault() {
     switch (getCookie('search-engine')) {
-        case 'https://www.google.com/search?q=%s':
+        case 'http://www.google.com/search?q=%s':
             return 'google';
-        case 'https://www.bing.com/search?q=%s':
+        case 'http://www.bing.com/search?q=%s':
             return 'bing';
     }
+}
+function defaultCookie(name, defaultValue) {
+    if (getCookie(name).length == 0) { setCookie(name, defaultValue); }
 }

@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 app.get("/x", (req, res) => {
     res.sendFile(process.cwd() + "/src/proxy.html");
 });
+app.get("/about", (req, res) => res.sendFile(process.cwd() + "/src/about.html"));
 
 app.use("/uv/sw.js", (req, res) => res.sendFile(process.cwd() + "/src/static/uv/sw.js"));
 app.use("/uv/uv.config.js", (req, res) => res.sendFile(process.cwd() + "/src/static/uv/uv.config.js"));
@@ -65,4 +66,4 @@ process.on("SIGTERM", stop);
 function stop() { server.close(); server2.close(); }
 
 server.listen(8080);
-server2.listen(4430);
+server2.listen(8443);

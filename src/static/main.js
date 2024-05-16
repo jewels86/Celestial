@@ -281,15 +281,10 @@ async function main() {
         console.log('mod (found)');
         switchTo(null, getStyleFromMod());
     }
-    if (getCookie("jokes").length == 0) {
-        setCookie('jokes', 'jokeapi');
-    }
-    if (getCookie("mods").length == 0) {
-        setCookie('mods', 'enabled');
-    }
-    if (getCookie("cloaking").length == 0) {
-        setCookie('cloaking', 'disabled');
-    }
+    defaultCookie('jokes', 'jokeapi');
+    defaultCookie('mods', 'enabled');
+    defaultCookie('cloaking', 'disabled');
+    defaultCookie('search-engine', 'http://google.com/search?q=%s');
 
     if (getCookie('jokes') != "disabled") {
         if (getCookie('jokes') == "jokeapi") {

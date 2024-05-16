@@ -9,14 +9,15 @@ document.getElementById('address').addEventListener('keydown', async (ev) => {
             let wispUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host + "/wisp/";
             await BareMux.SetTransport("EpxMod.EpoxyClient", { wisp: wispUrl });
 
-            address = address.replace('https://', '');
-            address = address.replace('http://', '');
-            address = ["https://", address].join('');
-            var search = '';
+            if (!(address.includes('https://') || address.includes('http://')) && address.includes('.')) {
+                address = [location.protocol + "//", address].join('');
+            }
+            if (!address.includes('.')) {
+                address = getCookie('search-engine').replace('%s', address);
+            }
             console.log(address);
-            try { search = new URL(address).toString(); }
-            catch { search = getCookie('search-engine').replace('%s', encodeURIComponent(address)); }
-            location.replace('/x?y=' + __uv$config.encodeUrl(search));
+            address = new URL(address).toString(); 
+            location.replace('/x?y=' + __uv$config.encodeUrl(address));
         }
         catch {
 
