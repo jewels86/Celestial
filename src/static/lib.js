@@ -169,18 +169,18 @@ function createOverlay() {
 function handleSEChangeAction(se) {
     switch (se) {
         case 'google':
-            setCookie('search-engine', 'http://www.google.com/search?q=%s');
+            setCookie('search-engine', 'https://www.google.com/search?q=%s');
             break;
         case 'bing':
-            setCookie('search-engine', 'http://www.bing.com/search?q=%s');
+            setCookie('search-engine', 'https://www.bing.com/search?q=%s');
             break;
     }
 }
 function handleSEDefault() {
     switch (getCookie('search-engine')) {
-        case 'http://www.google.com/search?q=%s':
+        case 'https://www.google.com/search?q=%s':
             return 'google';
-        case 'http://www.bing.com/search?q=%s':
+        case 'https://www.bing.com/search?q=%s':
             return 'bing';
     }
 }

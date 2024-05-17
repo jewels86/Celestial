@@ -10,7 +10,7 @@ document.getElementById('address').addEventListener('keydown', async (ev) => {
             await BareMux.SetTransport("EpxMod.EpoxyClient", { wisp: wispUrl });
 
             if (!(address.includes('https://') || address.includes('http://')) && address.includes('.')) {
-                address = [location.protocol + "//", address].join('');
+                address = ["https://", address].join('');
             }
             if (!address.includes('.')) {
                 address = getCookie('search-engine').replace('%s', encodeURIComponent(address));
