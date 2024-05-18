@@ -6,7 +6,8 @@ const modTypes = [
 ]
 const stages = [
     {name: "Startup", index: 0},
-    {name: "Search", index: 1}
+    {name: "Search", index: 1},
+    {name: "URL Change", index: 2}
 ]
 const defaultStyle = `primary:
 secondary:
@@ -186,4 +187,66 @@ function handleSEDefault() {
 }
 function defaultCookie(name, defaultValue) {
     if (getCookie(name).length == 0) { setCookie(name, defaultValue); }
+}
+function getEnabledScriptsForStage(stage) {
+    // [type {0}]-[name {1}]-[enabled(1)/disabled(0) {2}]-[keybind(0)/stage(1) {3}]-[keybind|stage {4}]-[content {5}]
+    var output = [];
+
+    for (let i = 0; i < getAmountOfMods(); i++) {
+        const mod = getCookie(`mod-${i}`).split('-');
+
+        if (mod[0] == '1' && mod[2] == '1' && mod[3] == '1' && mod[4] == stage) {
+            output.push(mod[5]);
+        }
+    }
+
+    return output;
+}
+function getEnabledKeybindScripts() {
+    var output = [];
+
+    for (let i = 0; i < getAmountOfMods(); i++) {
+        const mod = getCookie(`mod-${i}`).split('-');
+
+        if (mod[0] == '1' && mod[2] == '1' && mod[3] == '0') {
+            output.push(mod.join('-'));
+        }
+    }
+
+    return output;
+}
+function registerKeybinds() {
+    getEnabledKeybindScripts().forEach((element) => {
+        document.addEventListener('keydown', (ev) => {
+            const mod = element.split('-');
+            const keybind = mod[4].split('+');
+            var check = "if (";
+            keybind.forEach((part, index) => {
+                if (part == 'ctrl' || part == 'alt' || part == 'shift') {
+                    check += `ev.${part}Key`;
+                }
+                else {
+                    check += `ev.key == '${part}'`;
+                }
+                if (index + 1 != keybind.length) { check += ' && '; }
+                else { check += ')'}
+            });
+            var passed = false;
+            eval(check + ' { passed = true; }');
+            if (passed) { eval(mod[5]); }
+        });
+    });
+}
+function executeScriptsForStage(stage) {
+    getEnabledScriptsForStage(stage).forEach((element) => eval(element));
+}
+function processURL(url) {
+    var output = url
+    if (!(output.includes('https://') || output.includes('http://')) && output.includes('.')) {
+        output = ["https://", output].join('');
+    }
+    if (!output.includes('.')) {
+        output = getCookie('search-engine').replace('%s', encodeURIComponent(output));
+    }
+    return output;
 }

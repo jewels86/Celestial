@@ -198,6 +198,19 @@ footer .bottom p {
 .overlay-mod-settings {
     width: 20%;
 }
+.overlay-proxy-searchbar {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    height: auto;
+}
+.overlay-proxy-searchbar input {
+    width: 100%;
+}
+.overlay-proxy-searchbar div {
+    display: flex;
+    flex-direction: row;
+}
 
 #frame {
     height: 100vh;

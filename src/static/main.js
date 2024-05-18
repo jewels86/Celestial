@@ -304,6 +304,7 @@ async function main() {
                     "Accept": "text/plain"
                 }
             })).text();
+            document.getElementById('joke').innerText = document.getElementById('joke').innerText.replaceAll('\n', " ");
         }
         else if (getCookie('jokes') == "chuck norris") {
             await fetch("https://api.chucknorris.io/jokes/random").then((res) => {
@@ -311,38 +312,11 @@ async function main() {
             })
         }
     }
-
-    for (let i = 0; i < getAmountOfMods(); i++) {
-        const mod = getCookie(`mod-${i}`).split('-');
-
-        if (mod[0] == '1') {
-            if (mod[2] == '1' && mod[3] == '1') {
-                scripts[mod[4]] = [];
-                scripts[mod[4]].push(mod[5]);
-            }
-            if (mod[2] == '1' && mod[3] == '0') {
-                document.addEventListener('keydown', (ev) => {
-                    const keybind = mod[4].split('+');
-                    var check = "if (";
-                    keybind.forEach((part, index) => {
-                        if (part == 'ctrl' || part == 'alt' || part == 'shift') {
-                            check += `ev.${part}Key`;
-                        }
-                        else {
-                            check += `ev.key == '${part}'`;
-                        }
-                        if (index + 1 != keybind.length) { check += ' && '; }
-                        else { check += ')'}
-                    });
-                    var passed = false;
-                    eval(check + ' { passed = true; }');
-                    if (passed) { eval(mod[5]); }
-                });
-            }
-        }
+    
+    if (getCookie('mods') == 'enabled') {
+        executeScriptsForStage(0);
+        registerKeybinds();
     }
-
-    scripts.forEach(x => x.forEach(y => eval(y)));
 
     const _s = document.getElementById("settings");
     _s.onclick = () => settingsHandler();
