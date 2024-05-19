@@ -211,6 +211,16 @@ footer .bottom p {
     display: flex;
     flex-direction: row;
 }
+.overlay-proxy-history {
+    display: flex;
+    flex-direction: column;
+}
+.overlay-proxy-link {
+    background: none;
+    border: none;
+    padding: 4px;
+    text-decoration: underline;
+}
 
 #frame {
     height: 100vh;

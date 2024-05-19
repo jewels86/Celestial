@@ -1,3 +1,5 @@
+const pages = [];
+
 async function _main() {
     if (!navigator.serviceWorker) throw new Error();
     await navigator.serviceWorker.register(__uv$config.sw); 
@@ -14,7 +16,6 @@ async function _main() {
     registerKeybinds();
 
     var overlayOpen = false;
-    const pages = [];
 
     document.addEventListener('keydown', (ev) => overlay(ev, overlayOpen));
     frame.contentDocument.addEventListener('keydown', (ev) => { 
@@ -27,10 +28,12 @@ async function _main() {
             if (overlayOpen == true) { document.getElementById('overlay').remove(); overlayOpen = false; }
             if (!overlayOpen == true) { overlay(ev); overlayOpen = true; }
         });
-        pages.push(frame.src);
+        pages.push(decode(frame.src));
         executeScriptsForStage(2);
     });
 }
+function decode(x) { return __uv$config.decodeUrl(x.split('uv/service/')[1]); }
+function encode(x) { return location.host + '/uv/service/' + encodeUrl(x); }
 /**
  * @param {KeyboardEvent} ev 
  */
@@ -68,7 +71,19 @@ function overlay(ev, overlayOpen) {
         topDiv.appendChild(searchBar);
         topDiv.appendChild(topDiv2);
 
+        const history = document.createElement('div');
+        history.className = 'overlay-proxy-history';
+
+        pages.forEach((link) => {
+            const button = document.createElement('button');
+            button.className = 'overlay-proxy-link';
+            button.innerText = link;
+            button.addEventListener('click', () => frame.src = encode(link));
+            history.appendChild(button);
+        });
+
         overlay.appendChild(topDiv);
+        overlay.appendChild(history);
 
         overlayOpen = true
     }
