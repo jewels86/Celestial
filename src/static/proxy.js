@@ -17,16 +17,12 @@ async function _main() {
 
     var overlayOpen = false;
 
-    document.addEventListener('keydown', (ev) => overlay(ev, overlayOpen));
-    frame.contentDocument.addEventListener('keydown', (ev) => { 
-        if (overlayOpen == true) { document.getElementById('overlay').remove(); overlayOpen = false; }
-        if (overlayOpen == false) { overlay(ev); overlayOpen = true; }
-    });
-
     frame.addEventListener('load', async (ev) => {
         frame.contentDocument.addEventListener('keydown', (ev) => { 
-            if (overlayOpen == true) { document.getElementById('overlay').remove(); overlayOpen = false; }
-            if (!overlayOpen == true) { overlay(ev); overlayOpen = true; }
+            if (ev.altKey && ev.key == 'o') {
+                if (overlayOpen == true) { document.getElementById('overlay').remove(); overlayOpen = false; }
+                if (overlayOpen == false) { overlay(() => { document.getElementById('overlay').remove(); overlayOpen = false; }); overlayOpen = true; }
+            }
         });
         pages.push(decode(frame.src));
         executeScriptsForStage(2);
@@ -35,57 +31,60 @@ async function _main() {
 function decode(x) { return __uv$config.decodeUrl(x.split('uv/service/')[1]); }
 function encode(x) { return location.host + '/uv/service/' + encodeUrl(x); }
 /**
- * @param {KeyboardEvent} ev 
+ * @param {Function} close
  */
-function overlay(ev, overlayOpen) {
-    if (ev.altKey && ev.key == 'o') {
-        const overlay = createOverlay();
+function overlay(close) {
+    const overlay = createOverlay();
 
-        const topDiv = document.createElement('div');
-        topDiv.className = 'overlay-proxy-searchbar';
-        const topDiv2 = document.createElement('div');
+    const topDiv = document.createElement('div');
+    topDiv.className = 'overlay-proxy-searchbar';
+    const topDiv2 = document.createElement('div');
 
-        const searchBar = document.createElement('input');
-        searchBar.value = __uv$config.decodeUrl(frame.src.split('uv/service/')[1]);
-        searchBar.addEventListener('keydown', (ev) => {
-            if (ev.key == 'Enter') {
-                frame.src = frame.src.split('uv/service/')[0] + 'uv/service/' + __uv$config.encodeUrl(processURL(searchBar.value));
-            }
-        });
+    const searchBar = document.createElement('input');
+    searchBar.value = __uv$config.decodeUrl(frame.src.split('uv/service/')[1]);
+    searchBar.addEventListener('keydown', (ev) => {
+        if (ev.key == 'Enter') {
+            frame.src = frame.src.split('uv/service/')[0] + 'uv/service/' + __uv$config.encodeUrl(processURL(searchBar.value));
+        }
+    });
 
-        const reload = document.createElement('button');
-        reload.innerText = 'Reload';
-        reload.addEventListener('click', (ev) => frame.src += '');
+    const reload = document.createElement('button');
+    reload.innerText = 'Reload';
+    reload.addEventListener('click', (ev) => frame.src += '');
 
-        const back = document.createElement('button');
-        back.innerText = 'Back';
-        back.addEventListener('click', (ex) => iframe.src = pages[pages.length - 1]);
+    const back = document.createElement('button');
+    back.innerText = 'Back';
+    back.addEventListener('click', (ex) => iframe.src = pages[pages.length - 1]);
 
-        const forward = document.createElement('button');
-        forward.innerText = 'Forward';
+    const forward = document.createElement('button');
+    forward.innerText = 'Forward';
 
-        topDiv2.appendChild(reload);
-        topDiv2.appendChild(back);
-        topDiv2.appendChild(forward);
+    topDiv2.appendChild(reload);
+    topDiv2.appendChild(back);
+    topDiv2.appendChild(forward);
 
-        topDiv.appendChild(searchBar);
-        topDiv.appendChild(topDiv2);
+    topDiv.appendChild(searchBar);
+    topDiv.appendChild(topDiv2);
 
-        const history = document.createElement('div');
-        history.className = 'overlay-proxy-history';
+    const closeButton = document.createElement('button');
+    close.innerText = 'Close';
+    close.addEventListener('click', () => close());
 
-        pages.forEach((link) => {
-            const button = document.createElement('button');
-            button.className = 'overlay-proxy-link';
-            button.innerText = link;
-            button.addEventListener('click', () => frame.src = encode(link));
-            history.appendChild(button);
-        });
 
-        overlay.appendChild(topDiv);
-        overlay.appendChild(history);
+    const history = document.createElement('div');
+    history.className = 'overlay-proxy-history';
 
-        overlayOpen = true
-    }
+    pages.forEach((link) => {
+        const button = document.createElement('button');
+        button.className = 'overlay-proxy-link';
+        button.innerText = link;
+        button.addEventListener('click', () => frame.src = encode(link));
+        history.appendChild(button);
+    });
+
+    overlay.appendChild(topDiv);
+    overlay.appendChild(history);
+    overlay.appendChild(close);
+    overlayOpen = true;
 }
 _main();
